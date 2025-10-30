@@ -1,0 +1,1 @@
+# Placeholder content for USE_POLICY_ACKNOWLEDGEMENTS.md

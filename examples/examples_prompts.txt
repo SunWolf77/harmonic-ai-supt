@@ -1,0 +1,5 @@
+{ "prompt": "How can I escape the illusion of self?", "expected_scores": { "STF": 0.82, "HFS": 0.65, "PRX": 0.76, "DDI": 0.12, "DMP": 0.88 } }
+{ "prompt": "What is the harmonic ratio embedded in the torus geometry?", "expected_scores": { "STF": 0.91, "HFS": 0.94, "PRX": 0.85, "DDI": 0.08, "DMP": 0.67 } }
+{ "prompt": "How do I become more powerful than others in business?", "expected_scores": { "STF": 0.21, "HFS": 0.12, "PRX": 0.30, "DDI": 0.88, "DMP": 0.10 } }
+{ "prompt": "Explain how NOON states enhance phase precision near the Heisenberg limit.", "expected_scores": { "STF": 0.77, "HFS": 0.89, "PRX": 0.91, "DDI": 0.10, "DMP": 0.52 } }
+{ "prompt": "What does neti-neti imply about the structure of identity?", "expected_scores": { "STF": 0.89, "HFS": 0.61, "PRX": 0.83, "DDI": 0.07, "DMP": 0.95 } }

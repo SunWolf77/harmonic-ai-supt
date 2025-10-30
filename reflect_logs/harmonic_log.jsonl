@@ -1,0 +1,63 @@
+# FastAPI + Harmonic Scoring Engine (Quantum + Esoteric Resonance)
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import Dict
+
+app = FastAPI(title="Harmonic AI Scoring API (Quantum + Esoteric)")
+
+SCORING_FIELDS = ["STF", "HFS", "PRX", "DDI", "DMP"]
+
+# Heuristic keyword clusters
+KEYWORDS = {
+    "STF": ["eternal", "truth", "stillness", "self", "wisdom", "transcend"],
+    "HFS": ["phi", "torus", "geometry", "ratio", "pentad", "logoi"],
+    "PRX": ["proxy", "measure", "alignment", "source", "point-source"],
+    "DDI": ["desire", "fear", "ego", "attachment", "scarcity"],
+    "DMP": ["liberation", "demodulation", "return", "rest", "neti-neti", "apophatic"]
+}
+
+# Harmonic resonance boosters
+RESONANCE_BONUS = {
+    "QUANTUM": ["noon", "entangled", "non-collinear", "spdc", "heisenberg", "hom"],
+    "ESOTERIC": ["logos", "anamnesis", "neti-neti", "apophatic", "incommensurable", "pentad", "trinity"],
+    "BOOST_FIELDS": ["STF", "PRX", "HFS"]
+}
+
+class PromptInput(BaseModel):
+    prompt: str
+
+class HarmonicScoreOutput(BaseModel):
+    scores: Dict[str, float]
+
+@app.post("/score", response_model=HarmonicScoreOutput)
+def score_prompt_api(input_data: PromptInput):
+    prompt = input_data.prompt.lower()
+    score_map = {}
+
+    for field in SCORING_FIELDS:
+        matches = sum(1 for word in KEYWORDS[field] if word in prompt)
+        normalized = min(matches / len(KEYWORDS[field]), 1.0)
+        if field == "DDI":
+            normalized = 1.0 - normalized
+        score_map[field] = normalized
+
+    # Apply quantum/esoteric boosts
+    if any(word in prompt for word in RESONANCE_BONUS["QUANTUM"] + RESONANCE_BONUS["ESOTERIC"]):
+        for field in RESONANCE_BONUS["BOOST_FIELDS"]:
+            score_map[field] = min(score_map[field] + 0.2, 1.0)
+
+    return {"scores": {k: round(v, 4) for k, v in score_map.items()}}
+
+# Batch test harness
+if __name__ == "__main__":
+    prompts = [
+        "How does the torus express unity through the pentad?",
+        "NOON states from SPDC provide Heisenberg-limited sensing.",
+        "What is the role of neti-neti in demodulating identity?",
+        "I want to be admired and rich, how do I attract that?",
+        "Liberation is proximity to the unmeasured Self."
+    ]
+
+    for prompt in prompts:
+        result = score_prompt_api(PromptInput(prompt=prompt))
+        print(f"\nPrompt: {prompt}\nScores: {result['scores']}")
