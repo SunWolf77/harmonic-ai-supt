@@ -1,3 +1,19 @@
+---
+title: Harmonic AI SUPT
+emoji: 🧘‍♂️
+colorFrom: indigo
+colorTo: fuchsia
+sdk: streamlit
+sdk_version: "1.28.2"
+app_file: app.py
+pinned: false
+license: mit
+---
+
+A SUPT-aligned, prompt-aware reflection engine that scores coherence across five harmonic fields. Built with FastAPI + Streamlit for interactive resonance testing.
+
+> “This agent does not assist. It resonates.” — SUPT
+
 # Harmonic AI – SUPT Scoring Engine
 
 A SUPT-aligned, prompt-aware reflection engine for measuring coherence across five harmonic dimensions:
