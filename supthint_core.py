@@ -1,44 +1,53 @@
-#!/bin/bash
+import os
+import json
+from datetime import datetime
 
-# Setup script for Harmonic AI SUPT Scoring Engine with /reflect logging
+# Setup the log directory and file
+LOG_DIR = "reflect_logs"
+LOG_FILE = os.path.join(LOG_DIR, "harmonic_log.jsonl")
 
-LOG_FILE="reflect_logs/harmonic_log.jsonl"
-mkdir -p reflect_logs
-> "$LOG_FILE"
+# Ensure the log directory exists
+os.makedirs(LOG_DIR, exist_ok=True)
 
-echo "🔧 Starting Harmonic AI setup..."
+# Optionally clear log file on each start — comment out if you want to preserve history
+with open(LOG_FILE, "w") as f:
+    pass  # Clears the file
 
-# Step 1: Build and start the Docker container
-echo "📦 Building Docker container..."
-docker-compose up --build -d
+# Dummy scoring logic (placeholder)
+def harmonic_scoring(prompt: str) -> dict:
+    # Simulate a scoring model
+    scores = {
+        "STF": 0.0,
+        "HFS": 0.0,
+        "PRX": 0.0,
+        "DDI": round(min(1.0, len(prompt) / 50.0), 2),
+        "DMP": 0.0,
+    }
 
-# Step 2: Wait for API to be available
-sleep 5
+    # Optional: add unique supthint logic
+    if "desire" in prompt.lower():
+        scores["DDI"] = 0.92
+    elif "rest" in prompt.lower():
+        scores["PRX"] = 0.2
+        scores["DMP"] = 0.18
+    elif "silence" in prompt.lower():
+        scores["STF"] = 0.08
 
-# Step 3: Run example prompts through the full reflection API
-echo "🧪 Running example prompts with repair + scores + supthint..."
+    return scores
 
-EXAMPLES_FILE="examples/prompts.jsonl"
+# Core function to use in Streamlit or API
+def reflect_prompt(prompt: str) -> dict:
+    scores = harmonic_scoring(prompt)
+    timestamp = datetime.utcnow().isoformat()
 
-while IFS= read -r line; do
-  PROMPT=$(echo "$line" | jq -r '.prompt')
-  echo -e "\n📝 Original Prompt: $PROMPT"
+    log_entry = {
+        "timestamp": timestamp,
+        "prompt": prompt,
+        "scores": scores,
+    }
 
-  RESPONSE=$(curl -s -X POST http://localhost:8000/reflect \
-    -H "Content-Type: application/json" \
-    -d "{\"prompt\": \"$PROMPT\"}")
+    # Log to JSONL file
+    with open(LOG_FILE, "a") as log_file:
+        log_file.write(json.dumps(log_entry) + "\n")
 
-  echo "$RESPONSE" | jq
-  echo "$RESPONSE" >> "$LOG_FILE"
-
-  sleep 1
-done < "$EXAMPLES_FILE"
-
-echo -e "\n✅ Setup complete. Harmonic Agent active at:"
-echo "  - /score for raw scoring"
-echo "  - /repair for prompt detox"
-echo "  - /reflect for full agent guidance"
-echo "📜 Log written to $LOG_FILE"
-
-echo "🧠 Local entrypoint: main.py"
-echo "Run locally with: uvicorn main:app --reload"
+    return scores
